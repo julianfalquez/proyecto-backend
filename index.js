@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const userRouter = require("./routes/users");
 const postRouter = require("./routes/posts");
 const reviewRouter = require("./routes/review");
+const cartRouter = require("./routes/cart");
+const historyRouter = require("./routes/history");
 
 const app = express();
 const port = 3000;
@@ -30,6 +32,8 @@ app.use(function (req, res, next) {
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/reviews", reviewRouter);
+app.use("/cart", cartRouter);
+app.use("/history", historyRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`);

@@ -1,44 +1,27 @@
+const User = require("../schemas/User");
 
-const fetchPosts = async (req, res) => {
-  if (req.query.user_id) {
-    const user_id = req.query.user_id;
-    const fetchUserPosts = await Post.find({ owner_id: user_id });
-    if (fetchUserPosts.length > 0) {
-      res.send(fetchUserPosts);
-    } else {
-      res.send({ msg: "No posts found" });
-    }
-  } else if (req.query.post_id) {
-    const post_id = req.query.post_id;
-    const fetchPosts = await Post.find({ _id: post_id });
-    if (fetchPosts.length > 0) {
-      res.send(fetchPosts);
-    } else {
-      res.send({ msg: "No posts found" });
-    }
-  } else {
-    res.status(400).send({ error: "Bad params" });
-  }
+const fetchCart = async (req, res) => {
+  const user_id = req.query.user_id;
+  const user = await User.findOne({ _id: user_id });
+  res.send(user.returnCart());
 };
 
-const createPost = async (req, res) => {
-  const { owner_id, img_url, display_name, description, price } = req.body;
-  const newPost = new Post({
-    owner_id,
-    img_url,
-    display_name,
-    description,
-    price,
-  });
-  await newPost.save();
-  res.send("Post Created");
+const addToCart = async (req, res) => {
+  const { product_id, user_id } = req.body;
+  const user = await User.findOne({ _id: user_id });
+  user.addToCart(product_id);
+  await user.save();
+  res.send("Item added");
 };
 
-const fetchRecentPosts = async (req, res) => {
-  const fetchRecentPosts = await Post.find().sort({createdAt:-1});
-  res.send(fetchRecentPosts);
+const buyCart = async (req, res) => {
+    const {  user_id } = req.body;
+    const user = await User.findOne({ _id: user_id });
+    user.purchase();
+    await user.save();
+    res.send("Items Purchased");
 };
 
-exports.fetchPosts = fetchPosts;
-exports.createPost = createPost;
-exports.fetchRecentPosts = fetchRecentPosts;
+exports.fetchCart = fetchCart;
+exports.addToCart = addToCart;
+exports.buyCart = buyCart;

@@ -1,10 +1,10 @@
 const express = require("express");
-const postController = require("../controllers/posts");
+const cartController = require("../controllers/cart");
 
 const router = express.Router();
 
-router.get("/", postController.fetchPosts);
-router.post("/", postController.createPost);
-router.get("/recent", postController.fetchRecentPosts);
+router.get("/", cartController.fetchCart);
+router.post("/", cartController.addToCart);
+router.post("/buy", cartController.buyCart);
 
 module.exports = router;

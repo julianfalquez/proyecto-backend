@@ -7,7 +7,8 @@ const UserSchema = new mongoose.Schema(
     username: { type: String, required: true, unique: true, trim: true },
     password: { type: String, required: true },
     date: { type: Date, default: Date.now },
-    cart:{type:[String]}
+    cart: { type: [Object] },
+    purchaseHistory: { type: [Object] },
   },
   {
     timestamps: true,
@@ -21,6 +22,21 @@ UserSchema.methods.encryptPassword = async (password) => {
 
 UserSchema.methods.matchPassword = async function (password) {
   return await bcryptjs.compare(password, this.password);
+};
+UserSchema.methods.addToCart = async function (product_id) {
+  this.cart = [...this.cart, { product_id: product_id }];
+};
+UserSchema.methods.returnCart = function () {
+  return this.cart;
+};
+UserSchema.methods.purchase = function () {
+  console.log(this.cart);
+  this.purchaseHistory = [...this.cart];
+  console.log(this.purchaseHistory);
+  this.cart = [];
+};
+UserSchema.methods.returnHistory = function () {
+  return this.purchaseHistory;
 };
 
 module.exports = mongoose.model("User", UserSchema);
