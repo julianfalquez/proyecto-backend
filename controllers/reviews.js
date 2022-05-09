@@ -3,11 +3,17 @@ const Review = require("../schemas/Review");
 const fetchReviews = async (req, res) => {
   const product_id = req.query.product_id;
   const user_id = req.query.user_id;
-  const fetchReviews = await Review.find({
-    user_id: user_id,
-    product_id: product_id,
-  });
-  res.send(fetchReviews);
+  if (user_id) {
+    const fetchReviews = await Review.find({
+      user_id: user_id,
+    });
+    res.send(fetchReviews);
+  } else if (product_id) {
+    const fetchReviews = await Review.find({
+      product_id: product_id,
+    });
+    res.send(fetchReviews);
+  }
 };
 
 const postReview = async (req, res) => {
